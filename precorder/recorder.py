@@ -10,14 +10,12 @@ logger = getLogger(__name__)
 
 OUTDIR = Path('./output')
 
-OUTFILE = OUTDIR / f'record-{time():.0f}.wav'
-
 SAMPLE_RATE = 44100
 FORMAT = paInt16
-CHANNELS = 2
+CHANNELS = 1
 CHUNK_SIZE = 1024
-BUF_SIZE = 1024
-DEVICE = 1
+BUF_SIZE = 4096
+DEVICE = 0
 
 if not OUTDIR.exists():
     OUTDIR.mkdir()
@@ -38,12 +36,11 @@ def run(pipe: PipeConnection):
         if pipe.poll():
             cmd: str = pipe.recv()
 
+            logger.info('recv ' + cmd)
             if cmd == 'start':
                 if wavefile is not None:
                     logger.warning('already recording')
                     continue
-
-                logger.info('starting record')
 
                 filename = str(OUTDIR / f'record-{time():.0f}.wav')
 
@@ -61,12 +58,10 @@ def run(pipe: PipeConnection):
                     logger.warning('not recording')
                     continue
 
-                logger.info('stopping record')
-
                 logger.info('closing wave output')
                 wavefile.close()
                 wavefile = None
-                
+
             elif cmd == 'terminate':
                 logger.info('terminating')
                 break
@@ -76,6 +71,23 @@ def run(pipe: PipeConnection):
                 logger.info(f'queue duration = {len(queue) * CHUNK_SIZE / SAMPLE_RATE:.2f}s')
                 if wavefile:
                     logger.info(f'output file offset = {wavefile.tell()}')
+            elif cmd == 'flush':
+                filename = str(OUTDIR / f'record-{time():.0f}.wav')
+                
+                wavefile = wvopen(filename, 'wb')
+                wavefile.setparams((CHANNELS, pa.get_sample_size(FORMAT), SAMPLE_RATE, 0, 'NONE', 'NONE'))
+
+                logger.info(f'flushing {len(queue)} chunks')
+                
+                while len(queue):
+                    wavefile.writeframes(queue.popleft())
+                logger.info(f' -> {filename}')
+
+                wavefile.close()
+                wavefile = None
+            elif cmd == 'clear':
+                logger.info(f'dropping {len(queue)} chunks')
+                queue.clear()
 
         chunk = stream.read(CHUNK_SIZE)
 

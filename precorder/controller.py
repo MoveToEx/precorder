@@ -4,6 +4,15 @@ from logging import getLogger
 
 logger = getLogger(__name__)
 
+SIGNALS = {
+    's': 'start',
+    't': 'stop',
+    'i': 'inspect',
+    'q': 'terminate',
+    'f': 'flush',
+    'c': 'clear'
+}
+
 def run():
     pc, cc = Pipe()
 
@@ -14,19 +23,15 @@ def run():
 
     while True:
         cmd = input()
-        if cmd == 's':
-            cc.send('start')
-            logger.info('start signal sent')
-        elif cmd == 't':
-            cc.send('stop')
-            logger.info('stop signal sent')
-        elif cmd == 'i':
-            cc.send('inspect')
-            logger.info('inspect signal sent')
 
-        elif cmd == 'q':
-            cc.send('terminate')
-            logger.info('terminate signal sent')
+        if cmd not in SIGNALS:
+            logger.warning('unknown command ' + cmd)
+            continue
+
+        cc.send(SIGNALS[cmd])
+        logger.info('send ' + SIGNALS[cmd])
+
+        if cmd == 'q':
             break
     
     pc.close()

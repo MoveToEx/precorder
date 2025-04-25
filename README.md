@@ -21,6 +21,8 @@ This will start a recorder process which immediates starts recording. Enter some
 - `s`: Start a new record and write all the frames in buffer to this record
 - `t`: Stop current record
 - `i`: Show current buffer size and some other information
+- `f`: Write current buffer into a wav file
+- `c`: Drop current buffer
 - `q`: Quit (Does not save current buffer)
 
 ## Trivia
