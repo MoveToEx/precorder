@@ -27,7 +27,7 @@ def run(pipe: PipeConnection):
     pa = PyAudio()
     stream = pa.open(format=FORMAT, channels=CHANNELS, rate=SAMPLE_RATE, input=True)
 
-    logger.info('using device ' + pa.get_device_info_by_index(DEVICE)['name'])
+    logger.info(f'using device {pa.get_device_info_by_index(DEVICE)['name']}')
     logger.info(f'recording with {CHANNELS} ch, {SAMPLE_RATE / 1000} KHz @ {pa.get_sample_size(FORMAT) * SAMPLE_RATE * CHANNELS * 8 / 1024:.2f} Kbps')
     logger.info(f'buffer size = {BUF_SIZE * CHUNK_SIZE * CHANNELS * pa.get_sample_size(FORMAT) / 1024 / 1024:.2f} MiB')
     logger.info(f'estimated buffer duration = {BUF_SIZE * CHUNK_SIZE / SAMPLE_RATE:.2f}s')
@@ -62,11 +62,11 @@ def run(pipe: PipeConnection):
                     continue
 
                 logger.info('stopping record')
-                if wavefile is not None:
-                    logger.info('closing wave output')
-                    wavefile.close()
 
+                logger.info('closing wave output')
+                wavefile.close()
                 wavefile = None
+                
             elif cmd == 'terminate':
                 logger.info('terminating')
                 break

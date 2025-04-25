@@ -1,4 +1,3 @@
-from multiprocessing.connection import PipeConnection
 from multiprocessing import Pipe, Process
 from precorder.recorder import run as run_recorder
 from logging import getLogger
