@@ -7,7 +7,7 @@ A recorder that keeps recording into an in-memory buffer, so when you hear somet
 
 ```powershell
 PS > poetry install
-PS > poetry env activate | iwr      # I'm using pwsh so change this if this does not match with your shell
+PS > poetry env activate | iex  # I'm using pwsh so change this if this does not match with your shell
 ```
 
 ## Run
