@@ -16,7 +16,7 @@ PS > poetry env activate | iex  # I'm using pwsh so change this if this does not
 (precorder-py3.13) PS > py main.py
 ```
 
-This will start a recorder process which immediates starts recording. Enter some command to interact with the recorder proces:  
+This will start a recorder process which immediately starts recording. Enter the command below to interact with the recorder process:  
 
 - `s`: Start a new record and write all the frames in buffer to this record
 - `t`: Stop current record
@@ -27,4 +27,4 @@ This will start a recorder process which immediates starts recording. Enter some
 
 ### Why?
 
-The idea originally comes to me when trying to record my roommates' noises when they were playing Valorant.  
+The idea originally came to me when trying to record my roommates' noises when they were playing Valorant.  
